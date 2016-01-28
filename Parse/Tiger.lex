@@ -57,7 +57,9 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 <YYINITIAL> "*" {return tok(sym.TIMES, null);}
 <YYINITIAL> ">" {return tok(sym.GT, null);}
 <YYINITIAL> "<" {return tok(sym.LT, null);}
-<YYINITIAL> "!=" {return tok(sym.NEQ, null);}
+<YYINITIAL> "<=" {return tok(sym.LE, null);}
+<YYINITIAL> ">=" {return tok(sym.GE, null);}
+<YYINITIAL> "<>" {return tok(sym.NEQ, null);}
 <YYINITIAL> "(" {return tok(sym.LPAREN, null);}
 <YYINITIAL> ")" {return tok(sym.RPAREN, null);}
 <YYINITIAL> ";" {return tok(sym.SEMICOLON, null);}
@@ -65,9 +67,10 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 <YYINITIAL> "]" {return tok(sym.RBRACK, null);}
 <YYINITIAL> "{" {return tok(sym.LBRACE, null);}
 <YYINITIAL> "}" {return tok(sym.RBRACE, null);}
-<YYINITIAL> "&&" {return tok(sym.AND, null);}
-<YYINITIAL> "||" {return tok(sym.OR, null);}
-<YYINITIAL> "==" {return tok(sym.EQ, null);}
+<YYINITIAL> "&" {return tok(sym.AND, null);}
+<YYINITIAL> "|" {return tok(sym.OR, null);}
+<YYINITIAL> "=" {return tok(sym.EQ, null);}
+<YYINITIAL> ":=" {return tok(sym.ASSIGN, null);}
 
 
 . { err("Illegal character: " + yytext()); }
