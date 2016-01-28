@@ -52,6 +52,7 @@ ALPHA=[A-Za-z]
 DIGIT=[0-9]
 WHITE_SPACE_CHAR=[\n\ \t\b\012]
 STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
+COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 
 %%
 <YYINITIAL> " "	{}
@@ -112,6 +113,7 @@ STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 }
 
 <YYINITIAL> "/*" {yybegin(COMMENT); commentDepth++;}
+<COMMENT> {COMMENT_TEXT} {}
 <COMMENT> "/*" {commentDepth++;}
 <COMMENT> "*/" {
   commentDepth--;
