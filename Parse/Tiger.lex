@@ -51,7 +51,7 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 <YYINITIAL> ","	{return tok(sym.COMMA, null);}
 <YYINITIAL> ":" {return tok(sym.COLON, null);}
 <YYINITIAL> "." {return tok(sym.DOT, null);}
-<YYINITIAL> "/" {return tok(sym.DIVIDE, null);} // add escape character
+<YYINITIAL> "/" {return tok(sym.DIVIDE, null);}
 <YYINITIAL> "-" {return tok(sym.MINUS, null);}
 <YYINITIAL> "+" {return tok(sym.PLUS, null);}
 <YYINITIAL> "*" {return tok(sym.TIMES, null);}
