@@ -44,6 +44,10 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
         }
 %eofval}       
 
+ALPHA=[A-Za-z]
+DIGIT=[0-9]
+WHITE_SPACE_CHAR=[\n\ \t\b\012]
+STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 
 %%
 " "	{}
@@ -71,6 +75,29 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 <YYINITIAL> "|" {return tok(sym.OR, null);}
 <YYINITIAL> "=" {return tok(sym.EQ, null);}
 <YYINITIAL> ":=" {return tok(sym.ASSIGN, null);}
+<YYINITIAL> [0-9]+ {return tok(sym.INT, Integer.parseInt(yytext()));}
+<YYINITIAL> \"{STRING_TEXT}\" {
+  return tok(sym.STRING, yytext());
+}
 
+<YYINITIAL> "while" {return tok(sym.WHILE, null);}
+<YYINITIAL> "for" {return tok(sym.FOR, null);}
+<YYINITIAL> "to" {return tok(sym.TO, null);
+<YYINITIAL> "break" {return tok(sym.BREAK, null);}
+<YYINITIAL> "let" {return tok(sym.LET, null);}
+<YYINITIAL> "in" {return tok(sym.IN, null);}
+<YYINITIAL> "end" {return tok(sym.END, null);}
+<YYINITIAL> "function" {return tok(sym.FUNCTION, null);}
+<YYINITIAL> "var" {return tok(sym.VAR, null);}
+<YYINITIAL> "type" {return tok(sym.TYPE, null);}
+<YYINITIAL> "array" {return tok(sym.ARRAY, null);}
+<YYINITIAL> "if" {return tok(sym.IF, null);}
+<YYINITIAL> "then" {return tok(sym.THEN, null);}
+<YYINITIAL> "else" {return tok(sym.ELSE, null);}
+<YYINITIAL> "do" {return tok(sym.DO, null);}
+<YYINITIAL> "of" {return tok(sym.OF, null);}
+<YYINITIAL> "nil" {return tok(sym.NIL, null);}
+
+<YYINITIAL> {ALPHA}({ALPHA}|{DIGIT}|_)* {return tok(sym.ID, yytext());}
 
 . { err("Illegal character: " + yytext()); }
