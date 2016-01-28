@@ -46,6 +46,8 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 
 //uhh maybe this is comment?
 //taken from gb
+ALPHA=[A-Za-z]
+DIGIT=[0-9]
 WHITE_SPACE_CHAR=[\n\ \t\b\012]
 STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 
