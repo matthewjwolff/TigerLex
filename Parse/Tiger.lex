@@ -44,8 +44,6 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
         }
 %eofval}
 
-//uhh maybe this is comment?
-//taken from gb
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
 WHITE_SPACE_CHAR=[\n\ \t\b\012]
