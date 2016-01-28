@@ -1,9 +1,2 @@
-/* arr1 is valid since expression 0 is int = myint */
-let
-	type myint = int
-	type  arrtype = array of myint
-
-	var arr1:arrtype := arrtype [10] of 0
-in
-	arr1
-end
+, : ; ( ) [ ] { } . + - * / = <> < <= > >= & | := x y camelCase p0tat0_boI 7 42 69096
+" while /*for to /*break let in end*/ function*/ var type array if then else do of nil 
