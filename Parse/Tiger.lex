@@ -49,11 +49,6 @@ DIGIT=[0-9]
 WHITE_SPACE_CHAR=[\n\ \t\b\012]
 STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 
-ALPHA=[A-Za-z]
-DIGIT=[0-9]
-WHITE_SPACE_CHAR=[\n\ \t\b\012]
-STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
-
 %%
 " "	{}
 <YYINITIAL> \n	{newline();}
@@ -87,7 +82,7 @@ STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 
 <YYINITIAL> "while" {return tok(sym.WHILE, null);}
 <YYINITIAL> "for" {return tok(sym.FOR, null);}
-<YYINITIAL> "to" {return tok(sym.TO, null);
+<YYINITIAL> "to" {return tok(sym.TO, null);}
 <YYINITIAL> "break" {return tok(sym.BREAK, null);}
 <YYINITIAL> "let" {return tok(sym.LET, null);}
 <YYINITIAL> "in" {return tok(sym.IN, null);}
@@ -111,5 +106,3 @@ STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 <YYINITIAL> \"{STRING_TEXT}\" {
   return tok(sym.STRING, yytext());
 }
-
-<YYINITIAL> {ALPHA}({ALPHA}|{DIGIT}|_)* {return tok(sym.ID, yytext());}
