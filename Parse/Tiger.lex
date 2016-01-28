@@ -36,6 +36,8 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
   errorMsg=e;
 }
 
+private int commentDepth = 0;
+
 %}
 
 %eofval{
@@ -43,6 +45,8 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 	 return tok(sym.EOF, null);
         }
 %eofval}
+
+%state COMMENT
 
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
@@ -105,4 +109,12 @@ STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 <YYINITIAL> [0-9]+ {return tok(sym.INT, Integer.parseInt(yytext()));}
 <YYINITIAL> \"{STRING_TEXT}\" {
   return tok(sym.STRING, yytext());
+}
+
+<YYINITIAL> "/*" {yybegin(COMMENT); commentDepth++;}
+<COMMENT> "/*" {commentDepth++;}
+<COMMENT> "*/" {
+  commentDepth--;
+  if(commentDepth==0)
+    yybegin(YYINITIAL);
 }
