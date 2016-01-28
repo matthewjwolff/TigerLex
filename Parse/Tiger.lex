@@ -58,7 +58,7 @@ STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 ","	{return tok(sym.COMMA, null);}
 . { err("Illegal character: " + yytext()); }
 
-<YYINITIAL> [0-9]+ {return tok(sym.INT, Integer.parseInt(yytext());}
+<YYINITIAL> [0-9]+ {return tok(sym.INT, Integer.parseInt(yytext()));}
 <YYINITIAL> \"{STRING_TEXT}\" {
   return tok(sym.STRING, yytext());
 }
