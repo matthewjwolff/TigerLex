@@ -54,7 +54,7 @@ WHITE_SPACE_CHAR=[\n\ \t\b\012]
 STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 
 %%
-" "	{}
+<YYINITIAL> " "	{}
 <YYINITIAL> \n	{newline();}
 <YYINITIAL> ","	{return tok(sym.COMMA, null);}
 <YYINITIAL> ":" {return tok(sym.COLON, null);}
