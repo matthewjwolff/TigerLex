@@ -1,7 +1,7 @@
 package Parse;
 import ErrorMsg.ErrorMsg;
 
-%% 
+%%
 
 %implements Lexer
 %function nextToken
@@ -42,7 +42,12 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 	{
 	 return tok(sym.EOF, null);
         }
-%eofval}       
+%eofval}
+
+ALPHA=[A-Za-z]
+DIGIT=[0-9]
+WHITE_SPACE_CHAR=[\n\ \t\b\012]
+STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 
 
 %%
@@ -74,3 +79,10 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 
 
 . { err("Illegal character: " + yytext()); }
+
+<YYINITIAL> [0-9]+ {return tok(sym.INT, Integer.parseInt(yytext()));}
+<YYINITIAL> \"{STRING_TEXT}\" {
+  return tok(sym.STRING, yytext());
+}
+
+<YYINITIAL> {ALPHA}({ALPHA}|{DIGIT}|_)* {return tok(sym.ID, yytext());}
