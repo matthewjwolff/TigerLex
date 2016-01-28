@@ -62,5 +62,5 @@ STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 <YYINITIAL> \"{STRING_TEXT}\" {
   return tok(sym.STRING, yytext());
 }
-//IDENTIFIER
+
 <YYINITIAL> {ALPHA}({ALPHA}|{DIGIT}|_)* {return tok(sym.ID, yytext());}
