@@ -80,10 +80,6 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 <YYINITIAL> "|" {return tok(sym.OR, null);}
 <YYINITIAL> "=" {return tok(sym.EQ, null);}
 <YYINITIAL> ":=" {return tok(sym.ASSIGN, null);}
-<YYINITIAL> [0-9]+ {return tok(sym.INT, Integer.parseInt(yytext()));}
-<YYINITIAL> \"{STRING_TEXT}\" {
-  return tok(sym.STRING, yytext());
-}
 
 <YYINITIAL> "while" {return tok(sym.WHILE, null);}
 <YYINITIAL> "for" {return tok(sym.FOR, null);}
@@ -103,11 +99,16 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 <YYINITIAL> "of" {return tok(sym.OF, null);}
 <YYINITIAL> "nil" {return tok(sym.NIL, null);}
 
-<YYINITIAL> {ALPHA}({ALPHA}|{DIGIT}|_)* {return tok(sym.ID, yytext());}
+<YYINITIAL> [0-9]+ {
+  return tok(sym.INT, Integer.parseInt(yytext()));
+}
+
+<YYINITIAL> {ALPHA}({ALPHA}|{DIGIT}|_)* {
+  return tok(sym.ID, yytext());
+}
 
 . { err("Illegal character: " + yytext()); }
 
-<YYINITIAL> [0-9]+ {return tok(sym.INT, Integer.parseInt(yytext()));}
 <YYINITIAL> \"{STRING_TEXT}\" {
   return tok(sym.STRING, yytext());
 }
