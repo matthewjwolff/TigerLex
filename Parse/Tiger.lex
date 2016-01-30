@@ -107,13 +107,15 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
   return tok(sym.ID, yytext());
 }
 
-. { err("Illegal character: " + yytext()); }
-
 <YYINITIAL> \"{STRING_TEXT}\" {
   return tok(sym.STRING, yytext());
 }
 
-<YYINITIAL> "/*" {yybegin(COMMENT); commentDepth++;}
+<YYINITIAL> "/*" {
+  yybegin(COMMENT);
+  commentDepth++;
+}
+
 <COMMENT> {COMMENT_TEXT} {}
 <COMMENT> "/*" {commentDepth++;}
 <COMMENT> "*/" {
@@ -121,3 +123,5 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
   if(commentDepth==0)
     yybegin(YYINITIAL);
 }
+
+. { err("Illegal character: " + yytext()); }
