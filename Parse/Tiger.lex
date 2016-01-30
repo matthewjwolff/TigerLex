@@ -50,7 +50,7 @@ private int commentDepth = 0;
 
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
-WHITE_SPACE_CHAR=[\n\ \t\b\012\t]
+WHITE_SPACE_CHAR=[\n\ \t\b\012]
 STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 
