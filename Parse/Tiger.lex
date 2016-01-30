@@ -124,4 +124,6 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
     yybegin(YYINITIAL);
 }
 
-. { err("Illegal character: " + yytext()); }
+. {
+  err("Illegal character: " + yytext() + "(code: " + (int)(yytext().charAt(0)) + ")"); 
+}
