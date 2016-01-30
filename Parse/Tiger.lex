@@ -50,12 +50,12 @@ private int commentDepth = 0;
 
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
-WHITE_SPACE_CHAR=[\n\ \t\b\012]
+WHITE_SPACE_CHAR=[\ \t\b\012]
 STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 
 %%
-<YYINITIAL> " "	{}
+<YYINITIAL> {WHITE_SPACE_CHAR}	{}
 <YYINITIAL> \n	{newline();}
 <YYINITIAL> ","	{return tok(sym.COMMA, null);}
 <YYINITIAL> ":" {return tok(sym.COLON, null);}
