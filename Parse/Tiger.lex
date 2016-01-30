@@ -109,7 +109,7 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 
 <YYINITIAL> \"{STRING_TEXT}\" {
   //yytext() will have quotes in it, need to take a substring
-  return tok(sym.STRING, yytext().substring(1,yytext().length());
+  return tok(sym.STRING, yytext().substring(1,yytext().length()));
 }
 
 <YYINITIAL> "/*" {
