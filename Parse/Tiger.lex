@@ -50,7 +50,7 @@ private int commentDepth = 0;
 
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
-WHITE_SPACE_CHAR=[\n\ \t\b\012]
+WHITE_SPACE_CHAR=[\n\ \t\b\012\t]
 STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
 COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 
@@ -125,5 +125,5 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 }
 
 . {
-  err("Illegal character: " + yytext() + "(code: " + (int)(yytext().charAt(0)) + ")"); 
+  err("Illegal character: " + yytext() + "(code: " + (int)(yytext().charAt(0)) + ")");
 }
