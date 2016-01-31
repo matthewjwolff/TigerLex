@@ -124,12 +124,12 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 <STRING> {STRING_TEXT} {
   //regexp example for normal text
   //I don't like that I don't understand the STRING_TEXT regexp
-  buffer.add(yytext());
+  buffer.append(yytext());
 }
 
 <STRING> \\ {
-  //escaped character, eat next character and add its translated meaning
-  buffer.add("??")
+  //escaped character, eat next character and append its translated meaning
+  buffer.append("??")
 }
 
 <STRING> \" {
