@@ -1,4 +1,7 @@
+# Ignore compiled files
 *.class
+# But not the ones from JLex
+!Parse/JLex/*.class
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
