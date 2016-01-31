@@ -134,6 +134,7 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 
 <STRING> \" {
   //Found ending quote
+  yybegin(YYINITIAL);
   return tok(sym.STRING, buffer.toString());
 }
 
