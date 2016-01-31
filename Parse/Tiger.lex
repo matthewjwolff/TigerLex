@@ -38,15 +38,23 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 
 private int commentDepth = 0;
 
+private StringBuffer buffer;
+
 %}
 
 %eofval{
 	{
-	 return tok(sym.EOF, null);
-        }
+    //state is stored in variable yy_lexical_state, states are declared as final int STATENAME
+    if(yy_lexical_state==COMMENT)
+      err("Reached end of file with unterminated comment, proceeding anyway.");
+    if(yy_lexical_state==STRING)
+      err("Reached end of file with unterminated string, tossing unfinished string \""+ buffer.toString() + "\"");
+	  return tok(sym.EOF, null);
+  }
 %eofval}
 
 %state COMMENT
+%state STRING
 
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
@@ -107,9 +115,29 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
   return tok(sym.ID, yytext());
 }
 
-<YYINITIAL> \"{STRING_TEXT}\" {
-  //yytext() will have quotes in it, need to take a substring
-  return tok(sym.STRING, yytext().substring(1,yytext().length()-1));
+<YYINITIAL> \" {
+  //Found open quote, begin parsing string
+  yybegin(STRING);
+  buffer = new StringBuffer();
+}
+
+<STRING> {STRING_TEXT} {
+  //regexp example for normal text
+  //I don't like that I don't understand the STRING_TEXT regexp
+  buffer.add(yytext());
+}
+
+<STRING> \\ {
+  //escaped character, eat next character and add its translated meaning
+  buffer.add("??")
+}
+
+<STRING> \" {
+  //Found ending quote
+  return tok(sym.STRING, buffer.toString());
+  //can you null things in java? probably...
+  buffer = null;
+  yybegin(YYINITIAL);
 }
 
 <YYINITIAL> "/*" {
@@ -123,6 +151,8 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
   commentDepth--;
   if(commentDepth==0)
     yybegin(YYINITIAL);
+  if(commentDepth<0)
+    err("Uhh we're in negative comments now, something went really wrong.");
 }
 
 . {
