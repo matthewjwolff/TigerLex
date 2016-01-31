@@ -135,9 +135,6 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 <STRING> \" {
   //Found ending quote
   return tok(sym.STRING, buffer.toString());
-  //can you null things in java? probably...
-  buffer = null;
-  yybegin(YYINITIAL);
 }
 
 <YYINITIAL> "/*" {
