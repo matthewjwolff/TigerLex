@@ -59,8 +59,9 @@ private StringBuffer buffer;
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
 WHITE_SPACE_CHAR=[\ \t\b\012]
-STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
-COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
+//STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
+//COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
+CONTROL=(A-Z|a-z|@|\[|\]|\\|\^|_)
 
 %%
 <YYINITIAL> {WHITE_SPACE_CHAR}	{}
@@ -121,16 +122,32 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
   buffer = new StringBuffer();
 }
 
-<STRING> {STRING_TEXT} {
+<STRING> [A-Za-z] {
   //regexp example for normal text
   //I don't like that I don't understand the STRING_TEXT regexp
   buffer.append(yytext());
 }
 
-<STRING> \\ {
-  //escaped character, eat next character and append its translated meaning
-  buffer.append("??")
+<STRING> \\(n|t|\^{CONTROL}|\\|\"|[0-9][0-9][0-9]) {
+  //Backslash followed by one of n,t,\,",###,or a ^CONTROL
+  String escape = yytext().substring(1,yytext().length());
+  if(escape.charAt(0)=='n')
+    buffer.append("\n");
+  else if(escape.charAt(0)=='t')
+    buffer.append("\t");
+  else if(escape.charAt(0)=='^') {
+    //control nonsense
+    char control = (char)(escape.charAt(1)-64);
+    buffer.append(control);
+  }
+  else if(escape.charAt(0)=='\\')
+    buffer.append("\\");
+  else if(escape.charAt(0)=='\"')
+    buffer.append("\"");
+  else err("Escape sequence "+yytext()+" unrecognized, discarding");
 }
+
+<STRING> \\{WHITE_SPACE_CHAR}+\\ {}
 
 <STRING> \" {
   //Found ending quote
@@ -143,7 +160,7 @@ COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
   commentDepth++;
 }
 
-<COMMENT> {COMMENT_TEXT} {}
+<COMMENT> . {}
 <COMMENT> "/*" {commentDepth++;}
 <COMMENT> "*/" {
   commentDepth--;
