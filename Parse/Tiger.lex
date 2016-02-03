@@ -59,8 +59,6 @@ private StringBuffer buffer;
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
 WHITE_SPACE_CHAR=[\ \t\b\012]
-//STRING_TEXT=(\\\"|[^\n\"]|\\{WHITE_SPACE_CHAR}+\\)*
-//COMMENT_TEXT=([^/*\n]|[^*\n]"/"[^*\n]|[^/\n]"*"[^/\n]|"*"[^/\n]|"/"[^*\n])*
 CONTROL=(A-Z|a-z|@|\[|\]|\\|\^|_)
 
 %%
@@ -122,9 +120,8 @@ CONTROL=(A-Z|a-z|@|\[|\]|\\|\^|_)
   buffer = new StringBuffer();
 }
 
-<STRING> [A-Za-z] {
-  //regexp example for normal text
-  //I don't like that I don't understand the STRING_TEXT regexp
+<STRING> [^\\|\"] {
+  //All text that is not \ or ". Parse for escape for \ and finish string at ".
   buffer.append(yytext());
 }
 
