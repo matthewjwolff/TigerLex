@@ -1,0 +1,12 @@
+/* This is a test of
+   multi-comments */
+x
+"Hello World"
+17
+"This is a test of \n a multi-line string"
+"Here is a beep \^g"
+"Back it up \^h\^h\^h"
+"I like \086"
+"I like putting random \" in my sentences"
+"I also enjoy putting random \\ in my sentences.\    
+ 2        				\ Because I can."

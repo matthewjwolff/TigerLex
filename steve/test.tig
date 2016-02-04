@@ -1,0 +1,17 @@
+for (int i = 0; i<10; i++)
+{
+	/*Starting first string tests*/
+	String test = "This is a test string. We're going on \
+			\ multiple lines, but it should only print out one line."
+	String test2 = "This line should be split into two lines right \n here."
+	String test3 = "Here we are going to make a beeping noise. \^G"
+	String test4 = "The Red Sea was parted \t like this sentence is."
+	/* Beginning int tests /* Ending first string tests */*/
+	int x = 456;
+	int y = 789;
+	int z = 123;
+	/* Beginning second string tests */	
+	String test5 = "Here I'm using three different unicode codes \2 \92 \092 "
+	String test6 = "Time to use \""
+	String test7 = "This is a wrong use of \\ : \a"
+}

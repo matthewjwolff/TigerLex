@@ -47,19 +47,23 @@ private StringBuffer buffer;
     //state is stored in variable yy_lexical_state, states are declared as final int STATENAME
     if(yy_lexical_state==COMMENT)
       err("Reached end of file with unterminated comment, proceeding anyway.");
-    if(yy_lexical_state==STRING)
-      err("Reached end of file with unterminated string, tossing unfinished string \""+ buffer.toString() + "\"");
+    if(yy_lexical_state==STRING) {
+      err("Reached end of file with unterminated string, giving the token we got so far");
+      yybegin(YYINITIAL);
+      return tok(sym.STRING, buffer.toString());
+    }
 	  return tok(sym.EOF, null);
   }
 %eofval}
 
 %state COMMENT
 %state STRING
+%state IGNORE
 
 ALPHA=[A-Za-z]
 DIGIT=[0-9]
-WHITE_SPACE_CHAR=[\ \t\b\012]
-CONTROL=(A-Z|a-z|@|\[|\]|\\|\^|_)
+WHITE_SPACE_CHAR=[\ \n\t\b\012]
+CONTROL=[A-Za-z@\[\]\\\^_]
 
 %%
 <YYINITIAL> {WHITE_SPACE_CHAR}	{}
@@ -120,12 +124,12 @@ CONTROL=(A-Z|a-z|@|\[|\]|\\|\^|_)
   buffer = new StringBuffer();
 }
 
-<STRING> [^\\|\"] {
+<STRING> [^\\\"] {
   //All text that is not \ or ". Parse for escape for \ and finish string at ".
   buffer.append(yytext());
 }
 
-<STRING> \\(n|t|\^{CONTROL}|\\|\"|[0-9][0-9][0-9]) {
+<STRING> \\("n"|"t"|"^"{CONTROL}|\\|\"|[0-9][0-9][0-9]) {
   //Backslash followed by one of n,t,\,",###,or a ^CONTROL
   String escape = yytext().substring(1,yytext().length());
   if(escape.charAt(0)=='n')
@@ -134,7 +138,11 @@ CONTROL=(A-Z|a-z|@|\[|\]|\\|\^|_)
     buffer.append("\t");
   else if(escape.charAt(0)=='^') {
     //control nonsense
-    char control = (char)(escape.charAt(1)-64);
+    char controlCode = escape.charAt(1);
+    char control;
+    if(controlCode>96)
+      control = (char)(controlCode-96);
+    else control = (char)(controlCode-64);
     buffer.append(control);
   }
   else if(escape.charAt(0)=='\\')
@@ -144,7 +152,9 @@ CONTROL=(A-Z|a-z|@|\[|\]|\\|\^|_)
   else err("Escape sequence "+yytext()+" unrecognized, discarding");
 }
 
-<STRING> \\{WHITE_SPACE_CHAR}+\\ {}
+<STRING> \\{WHITE_SPACE_CHAR} {
+  yybegin(IGNORE);
+}
 
 <STRING> \" {
   //Found ending quote
@@ -153,11 +163,12 @@ CONTROL=(A-Z|a-z|@|\[|\]|\\|\^|_)
 }
 
 <YYINITIAL> "/*" {
-  yybegin(COMMENT);
   commentDepth++;
+  yybegin(COMMENT);
 }
 
 <COMMENT> . {}
+<COMMENT> \n {}
 <COMMENT> "/*" {commentDepth++;}
 <COMMENT> "*/" {
   commentDepth--;
@@ -165,6 +176,14 @@ CONTROL=(A-Z|a-z|@|\[|\]|\\|\^|_)
     yybegin(YYINITIAL);
   if(commentDepth<0)
     err("Uhh we're in negative comments now, something went really wrong.");
+}
+
+<IGNORE> {WHITE_SPACE_CHAR} {}
+<IGNORE> [^\\\ \n\t\b\012] {
+  err("Illegal non-whitespace character: "+yytext()+"(code: "+(int)(yytext().charAt(0))+")");
+}
+<IGNORE> \\ {
+  yybegin(STRING);
 }
 
 . {
