@@ -149,7 +149,14 @@ CONTROL=[A-Za-z@\[\]\\\^_]
     buffer.append("\\");
   else if(escape.charAt(0)=='\"')
     buffer.append("\"");
-  else err("Escape sequence "+yytext()+" unrecognized, discarding");
+  else {
+    try{
+      int uni = Integer.parseInt(escape.substring(1,escape.length()));
+      char uniChar = (char)uni;
+      buffer.append(uniChar);
+    } catch(NumberFormatException e) {
+    }
+  }
 }
 
 <STRING> \\{WHITE_SPACE_CHAR} {
