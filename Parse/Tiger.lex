@@ -39,6 +39,7 @@ Yylex(java.io.InputStream s, ErrorMsg e) {
 private int commentDepth = 0;
 
 private StringBuffer buffer;
+private int stringl;
 
 %}
 
@@ -122,6 +123,7 @@ CONTROL=[A-Za-z@\[\]\\\^_]
   //Found open quote, begin parsing string
   yybegin(STRING);
   buffer = new StringBuffer();
+  stringl = yychar;
 }
 
 <STRING> [^\\\"] {
@@ -166,7 +168,9 @@ CONTROL=[A-Za-z@\[\]\\\^_]
 <STRING> \" {
   //Found ending quote
   yybegin(YYINITIAL);
-  return tok(sym.STRING, buffer.toString());
+  String val = buffer.toString();
+  //Since we're building the string characterwise, we have to reconstruct the character positions...
+  return new java_cup.runtime.Symbol(sym.STRING, stringl, yychar, val);
 }
 
 <YYINITIAL> "/*" {
